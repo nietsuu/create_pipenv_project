@@ -84,12 +84,11 @@ class Outputs:
         os.mkdir(name)
         os.chdir(name)
         os.mkdir(name)
-        os.mkdir("tests")
 
         self._copy_user_files(name)
         FileOperations.insert_text(
             "run.py",
-            66,
+            57,
             f"    from {name} import main",
             f"    from {name}.logging import get_logger",
             "",
