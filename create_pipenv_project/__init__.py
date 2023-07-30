@@ -21,6 +21,7 @@ class FileOperations:
 class Inputs:
     def __init__(self) -> None:
         self.project_name = self.get_project_name()
+        self.git_init = self.get_git_init()
 
     def input(self, prompt: str) -> str:
         return input(f"{ansi.BOLD_PURPLE}{prompt}:{ansi.END} ").strip()
@@ -39,10 +40,25 @@ class Inputs:
 
             return project_name
 
+    def get_git_init(self) -> bool:
+        while True:
+            is_git_init = self.input("Initialize Git repository?").lower()
+
+            if is_git_init in ("y", "yes", "1"):
+                return True
+
+            if is_git_init in ("n", "no", "0"):
+                return False
+
+            print_error("Please specify if yes or no.")
+
 
 class Outputs:
     def __init__(self, inputs: Inputs) -> None:
         self.create_project(inputs.project_name)
+
+        if inputs.git_init:
+            self.git_init()
 
     def _copy_user_files(self, project_name: str) -> None:
         mapping = {
@@ -94,6 +110,12 @@ class Outputs:
             'uvloop = {version = "*", sys_platform = "== \'linux\'"}',
         )
         os.system("pipenv install")
+
+    def git_init(self) -> None:
+        os.system("git init")
+        os.system("git branch -m main")
+        os.system("git add .")
+        os.system('git commit -m "Create Pipenv project"')
 
 
 def main() -> int:
