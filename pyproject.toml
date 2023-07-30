@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+dynamic = ["version"]
+name = "create_pipenv_project"
+authors = [
+  { name="Nie Tsuu", email="nietsuu@gmail.com" },
+]
+description = "A CLI tool for creating Python projects with Pipenv workflow."
+readme = "README.md"
+license-files = { paths = ["LICENSE"] }
+requires-python = ">=3.11"
+
+[project.urls]
+"Repository" = "https://github.com/nietsuu/create_pipenv_project"
+
+[project.scripts]
+create_pipenv_project = "create_pipenv_project:main"
+
+[tool.hatch.build]
+include = [
+  "create_pipenv_project/*.py",
+]
+
+[tool.hatch.version]
+path = "create_pipenv_project/__init__.py"
