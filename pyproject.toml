@@ -12,6 +12,9 @@ description = "A CLI tool for creating Python projects with Pipenv workflow."
 readme = "README.md"
 license-files = { paths = ["LICENSE"] }
 requires-python = ">=3.11"
+dependencies = [
+  "pipenv"
+]
 
 [project.urls]
 "Repository" = "https://github.com/nietsuu/create_pipenv_project"
