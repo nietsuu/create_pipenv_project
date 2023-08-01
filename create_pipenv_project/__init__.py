@@ -1,4 +1,4 @@
-__version__ = "0.3"
+__version__ = "0.4"
 
 import os
 import shutil
@@ -111,7 +111,7 @@ class Outputs:
             5,
             "\n[scripts]",
             'app = "python run.py"',
-            'tests = "./run_tests.sh"',
+            'tests = "bash ./run_tests.sh"',
             'format = "black ."',
         )
         FileOperations.insert_text(
