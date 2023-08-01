@@ -1,4 +1,4 @@
-__version__ = "0.2"
+__version__ = "0.3"
 
 import os
 import shutil
@@ -76,7 +76,11 @@ class Outputs:
         user_files_dirpath = os.path.join(cpp_dirpath, "user_files")
 
         for filename in os.listdir(user_files_dirpath):
-            paste_dir = mapping[filename]
+            try:
+                paste_dir = mapping[filename]
+            except KeyError:
+                continue
+
             shutil.copy(
                 os.path.join(user_files_dirpath, filename),
                 paste_dir,
