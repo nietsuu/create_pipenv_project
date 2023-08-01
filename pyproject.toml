@@ -24,7 +24,7 @@ create_pipenv_project = "create_pipenv_project:main"
 
 [tool.hatch.build]
 include = [
-  "create_pipenv_project/*.py",
+  "create_pipenv_project/**",
 ]
 
 [tool.hatch.version]
