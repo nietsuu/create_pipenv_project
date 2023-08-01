@@ -24,11 +24,11 @@ class Inputs:
         self.git_init = self.get_git_init()
 
     def input(self, prompt: str) -> str:
-        return input(f"{ansi.BOLD_PURPLE}{prompt}:{ansi.END} ").strip()
+        return input(f"{ansi.BOLD_PURPLE}{prompt}{ansi.END} ").strip()
 
     def get_project_name(self) -> str:
         while True:
-            project_name = self.input("Project Name")
+            project_name = self.input("Project Name:")
 
             if project_name == "":
                 print_error("Project name cannot be empty.")
@@ -68,6 +68,7 @@ class Outputs:
             "run_tests.sh": ".",
             "mypy.ini": ".",
             "__init__.py": project_name,
+            "_main_runner.py": project_name,
             "logging.py": project_name,
         }
 
@@ -87,12 +88,17 @@ class Outputs:
         os.mkdir(name)
 
         self._copy_user_files(name)
+        FileOperations.insert_text("run.py", 3, f"    from {name} import main")
         FileOperations.insert_text(
-            "run.py",
-            57,
-            f"    from {name} import main",
-            f"    from {name}.logging import get_logger",
-            "",
+            os.path.join(name, "__init__.py"),
+            2,
+            f"from {name}.logging import get_logger",
+            f"from {name}._main_runner import async_main_runner",
+        )
+        FileOperations.insert_text(
+            os.path.join(name, "_main_runner.py"),
+            8,
+            f"from {name}.logging import get_logger",
         )
 
         os.system("pipenv install --dev --skip-lock mypy black coverage pytest")
