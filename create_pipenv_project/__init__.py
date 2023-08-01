@@ -66,6 +66,7 @@ class Outputs:
             ".gitignore": ".",
             "run.py": ".",
             "run_tests.sh": ".",
+            "mypy.ini": ".",
             "__init__.py": project_name,
             "logging.py": project_name,
         }
