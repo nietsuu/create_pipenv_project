@@ -65,7 +65,6 @@ class Outputs:
             "env": ".env",
             ".gitignore": ".",
             "run.py": ".",
-            "run_tests.sh": ".",
             "mypy.ini": ".",
             "__init__.py": project_name,
             "_main_runner.py": project_name,
@@ -111,12 +110,14 @@ class Outputs:
             5,
             "\n[scripts]",
             'app = "python run.py"',
-            'tests = "bash ./run_tests.sh"',
+            'mypy = "mypy ."',
+            'tests = "coverage run -m pytest"',
             'format = "black ."',
+            'mypy_install_types = "mypy --install-types"',
         )
         FileOperations.insert_text(
             "Pipfile",
-            12,
+            14,
             'uvloop = {version = "*", sys_platform = "== \'linux\'"}',
         )
         os.system("pipenv install")
