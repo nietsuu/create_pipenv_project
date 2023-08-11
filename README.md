@@ -5,7 +5,7 @@ A CLI tool for creating Python projects with Pipenv workflow.
 - **Type Checking:**
 Preinstalled with [mypy](https://mypy-lang.org/) + `mypy.ini` configuration file.
 - **Logging:**
-Available with nice and colorful format + some other logging tools.
+Available with nice and colorful format + some other debugging tools.
 Uncaught exceptions are also captured to allow error logging for the entire program.
 - **asyncio:**
 Asynchronous programming out of the box using [uvloop](https://github.com/MagicStack/uvloop).
