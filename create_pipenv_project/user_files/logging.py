@@ -3,7 +3,7 @@ import time
 import logging
 import inspect
 from contextlib import contextmanager
-from typing import Optional, Union, Iterator
+from typing import Optional, Union, Iterator, Dict
 
 LOGGING_LEVEL = os.getenv("LOGGING_LEVEL") or logging.DEBUG
 
@@ -74,7 +74,7 @@ file_formatter = Formatter(colored=False)
 def debug_wall_time(
     logger_name: Union[str, logging.Logger],
     block_name: Optional[str] = None,
-) -> Iterator[None]:
+) -> Iterator[Dict[str, float | None]]:
     if isinstance(logger_name, logging.Logger):
         logger = logger_name
     else:
@@ -84,16 +84,27 @@ def debug_wall_time(
     logger.debug(f"Measuring wall clock time of {msg}...")
 
     start_time = time.time()
-    yield None
+    res: Dict[str, float | None] = {
+        "start_time": start_time,
+        "end_time": None,
+        "delta": None,
+    }
+    yield res
 
-    logger.debug(f"Wall clock time of {msg}: {round(time.time() - start_time, 2)}s")
+    end_time = time.time()
+    delta = end_time - start_time
+
+    res["end_time"] = end_time
+    res["delta"] = delta
+
+    logger.debug(f"Wall clock time of {msg}: {round(delta, 2)}s")
 
 
 @contextmanager
 def debug_cpu_time(
     logger_name: Union[str, logging.Logger],
     block_name: Optional[str] = None,
-) -> Iterator[None]:
+) -> Iterator[Dict[str, float | None]]:
     if isinstance(logger_name, logging.Logger):
         logger = logger_name
     else:
@@ -103,6 +114,17 @@ def debug_cpu_time(
     logger.debug(f"Measuring CPU time of {msg}...")
 
     start_time = time.process_time()
-    yield None
+    res: Dict[str, float | None] = {
+        "start_time": start_time,
+        "end_time": None,
+        "delta": None,
+    }
+    yield res
 
-    logger.debug(f"CPU time of {msg}: {round(time.process_time() - start_time, 2)}s")
+    end_time = time.process_time()
+    delta = end_time - start_time
+
+    res["end_time"] = end_time
+    res["delta"] = delta
+
+    logger.debug(f"CPU time of {msg}: {round(delta, 2)}s")
