@@ -70,6 +70,7 @@ class Outputs:
 
     def _copy_user_files(self, project_name: str) -> None:
         mapping = {
+            "env": ".env",
             ".gitignore": ".gitignore",
             "run.py": "run.py",
             "mypy.ini": "mypy.ini",
