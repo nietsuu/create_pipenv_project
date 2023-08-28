@@ -1,7 +1,6 @@
 __version__ = "0.6"
 
 import os
-import shutil
 import create_pipenv_project
 from create_pipenv_project.terminal import ANSICodes as ansi, print_error
 
@@ -63,12 +62,12 @@ class Outputs:
     def _copy_user_files(self, project_name: str) -> None:
         mapping = {
             "env": ".env",
-            ".gitignore": ".",
-            "run.py": ".",
-            "mypy.ini": ".",
-            "__init__.py": project_name,
-            "_main_runner.py": project_name,
-            "logging.py": project_name,
+            ".gitignore": ".gitignore",
+            "run.py": "run.py",
+            "mypy.ini": "mypy.ini",
+            "__init__.py": os.path.join(project_name, "__init__.py"),
+            "_main_runner.py": os.path.join(project_name, "_main_runner.py"),
+            "logging.py": os.path.join(project_name, "logging.py"),
         }
 
         cpp_dirpath = os.path.dirname(create_pipenv_project.__file__)
@@ -76,14 +75,15 @@ class Outputs:
 
         for filename in os.listdir(user_files_dirpath):
             try:
-                paste_dir = mapping[filename]
+                paste_path = mapping[filename]
             except KeyError:
                 continue
 
-            shutil.copy(
-                os.path.join(user_files_dirpath, filename),
-                paste_dir,
-            )
+            with open(os.path.join(user_files_dirpath, filename)) as file:
+                content = file.read().replace("{% PROJECT_NAME %}", project_name)
+
+            with open(paste_path, "w") as file:
+                file.write(content)
 
     def create_project(self, name: str) -> None:
         os.mkdir(name)
@@ -91,18 +91,6 @@ class Outputs:
         os.mkdir(name)
 
         self._copy_user_files(name)
-        FileOperations.insert_text("run.py", 3, f"    from {name} import main")
-        FileOperations.insert_text(
-            os.path.join(name, "__init__.py"),
-            2,
-            f"from {name}.logging import get_logger",
-            f"from {name}._main_runner import async_main_runner",
-        )
-        FileOperations.insert_text(
-            os.path.join(name, "_main_runner.py"),
-            8,
-            f"from {name}.logging import get_logger",
-        )
 
         os.system("pipenv install --dev --skip-lock mypy black coverage pytest")
         FileOperations.insert_text(
