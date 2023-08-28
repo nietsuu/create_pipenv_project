@@ -1,11 +1,9 @@
-import os
 import time
 import logging
 import inspect
 from contextlib import contextmanager
 from typing import Optional, Union, Iterator, Dict
-
-LOGGING_LEVEL = os.getenv("LOGGING_LEVEL") or logging.DEBUG
+from {% PROJECT_NAME %}.environ import LOGGING_LEVEL
 
 
 def get_logger(name: str) -> logging.Logger:

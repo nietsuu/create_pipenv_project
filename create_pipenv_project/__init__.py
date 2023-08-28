@@ -61,12 +61,12 @@ class Outputs:
 
     def _copy_user_files(self, project_name: str) -> None:
         mapping = {
-            "env": ".env",
             ".gitignore": ".gitignore",
             "run.py": "run.py",
             "mypy.ini": "mypy.ini",
             "__init__.py": os.path.join(project_name, "__init__.py"),
             "_main_runner.py": os.path.join(project_name, "_main_runner.py"),
+            "environ.py": os.path.join(project_name, "environ.py"),
             "logging.py": os.path.join(project_name, "logging.py"),
         }
 
