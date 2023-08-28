@@ -108,14 +108,12 @@ class Outputs:
             5,
             "\n[scripts]",
             'app = "python run.py"',
-            'mypy = "mypy ."',
             'tests = "coverage run -m pytest"',
-            'format = "black ."',
-            'mypy_install_types = "mypy --install-types"',
+            "check = \"bash -c 'black . && mypy . && mypy --install-types'\"",
         )
         FileOperations.insert_text(
             "Pipfile",
-            14,
+            12,
             'uvloop = {version = "*", sys_platform = "== \'linux\'"}',
         )
         os.system("pipenv install")
