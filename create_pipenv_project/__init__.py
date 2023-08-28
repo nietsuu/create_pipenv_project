@@ -21,6 +21,7 @@ class Inputs:
     def __init__(self) -> None:
         self.project_name = self.get_project_name()
         self.git_init = self.get_git_init()
+        print()
 
     def input(self, prompt: str) -> str:
         return input(f"{ansi.BOLD_PURPLE}{prompt}{ansi.END} ").strip()
@@ -58,6 +59,14 @@ class Outputs:
 
         if inputs.git_init:
             self.git_init()
+
+        print(f"\n{ansi.GREEN}Project successfully created.{ansi.END}")
+        print(
+            f"Start writing your code at {ansi.YELLOW}"
+            f"{os.path.join(inputs.project_name, inputs.project_name, '__init__.py')}"
+            f"{ansi.END}.\n"
+            f"Run with {ansi.YELLOW}pipenv run app{ansi.END}.\n"
+        )
 
     def _copy_user_files(self, project_name: str) -> None:
         mapping = {
