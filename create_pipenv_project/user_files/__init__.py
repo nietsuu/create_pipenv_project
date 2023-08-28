@@ -1,10 +1,16 @@
 import asyncio
-from {% PROJECT_NAME %}.logging import get_logger
 from {% PROJECT_NAME %}._main_runner import async_main_runner
+from {% PROJECT_NAME %}.logging import get_logger, trace, MeasureTime
 
 
 async def async_main(loop: asyncio.AbstractEventLoop) -> int:
-    get_logger("main").info("Hello world!!")
+    logger = get_logger("main")
+
+    trace()
+
+    with MeasureTime.cpu(logger, "main"):
+        logger.info("Hello world!!")
+
     return 0
 
 

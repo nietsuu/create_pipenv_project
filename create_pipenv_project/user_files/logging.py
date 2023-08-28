@@ -6,32 +6,69 @@ from typing import Optional, Union, Iterator, Dict
 from {% PROJECT_NAME %}.environ import LOGGING_LEVEL
 
 
-def get_logger(name: str) -> logging.Logger:
-    logger = logging.getLogger(name)
-    logger.setLevel(LOGGING_LEVEL)
+class MeasureTime:
+    @staticmethod
+    @contextmanager
+    def wall_clock(
+        logger_name: Union[str, logging.Logger],
+        block_name: Optional[str] = None,
+    ) -> Iterator[Dict[str, float | None]]:
+        if isinstance(logger_name, logging.Logger):
+            logger = logger_name
+        else:
+            logger = get_logger(logger_name)
 
-    if not logger.hasHandlers():
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(stream_formatter)
-        logger.addHandler(stream_handler)
+        msg = block_name or logger.name
+        logger.debug(f"Measuring wall clock time of {msg}...")
 
-        file_handler = logging.FileHandler("logs.txt")
-        file_handler.setFormatter(file_formatter)
-        logger.addHandler(file_handler)
+        start_time = time.time()
+        res: Dict[str, float | None] = {
+            "start_time": start_time,
+            "end_time": None,
+            "delta": None,
+        }
+        yield res
 
-    for handler in logger.handlers:
-        handler.setLevel(LOGGING_LEVEL)
+        end_time = time.time()
+        delta = end_time - start_time
 
-    return logger
+        res["end_time"] = end_time
+        res["delta"] = delta
+
+        logger.debug(f"Wall clock time of {msg}: {round(delta, 2)}s")
+
+    @staticmethod
+    @contextmanager
+    def cpu(
+        logger_name: Union[str, logging.Logger],
+        block_name: Optional[str] = None,
+    ) -> Iterator[Dict[str, float | None]]:
+        if isinstance(logger_name, logging.Logger):
+            logger = logger_name
+        else:
+            logger = get_logger(logger_name)
+
+        msg = block_name or logger.name
+        logger.debug(f"Measuring CPU time of {msg}...")
+
+        start_time = time.perf_counter()
+        res: Dict[str, float | None] = {
+            "start_time": start_time,
+            "end_time": None,
+            "delta": None,
+        }
+        yield res
+
+        end_time = time.perf_counter()
+        delta = end_time - start_time
+
+        res["end_time"] = end_time
+        res["delta"] = delta
+
+        logger.debug(f"CPU time of {msg}: {round(delta, 2)}s")
 
 
-def trace() -> None:
-    caller = inspect.getframeinfo(inspect.stack()[1][0])
-    logger = get_logger(f"Trace {caller.filename}")
-    logger.debug(f"Line {caller.lineno}")
-
-
-class Formatter(logging.Formatter):
+class _Formatter(logging.Formatter):
     def __init__(self, *, colored: bool = True) -> None:
         self.colored = colored
         self.last_record: Optional[logging.LogRecord] = None
@@ -64,65 +101,30 @@ class Formatter(logging.Formatter):
         return formatter.format(record)
 
 
-stream_formatter = Formatter()
-file_formatter = Formatter(colored=False)
+_stream_formatter = _Formatter()
+_file_formatter = _Formatter(colored=False)
 
 
-@contextmanager
-def debug_wall_time(
-    logger_name: Union[str, logging.Logger],
-    block_name: Optional[str] = None,
-) -> Iterator[Dict[str, float | None]]:
-    if isinstance(logger_name, logging.Logger):
-        logger = logger_name
-    else:
-        logger = get_logger(logger_name)
+def get_logger(name: str) -> logging.Logger:
+    logger = logging.getLogger(name)
+    logger.setLevel(LOGGING_LEVEL)
 
-    msg = block_name or logger.name
-    logger.debug(f"Measuring wall clock time of {msg}...")
+    if not logger.hasHandlers():
+        stream_handler = logging.StreamHandler()
+        stream_handler.setFormatter(_stream_formatter)
+        logger.addHandler(stream_handler)
 
-    start_time = time.time()
-    res: Dict[str, float | None] = {
-        "start_time": start_time,
-        "end_time": None,
-        "delta": None,
-    }
-    yield res
+        file_handler = logging.FileHandler("logs.txt")
+        file_handler.setFormatter(_file_formatter)
+        logger.addHandler(file_handler)
 
-    end_time = time.time()
-    delta = end_time - start_time
+    for handler in logger.handlers:
+        handler.setLevel(LOGGING_LEVEL)
 
-    res["end_time"] = end_time
-    res["delta"] = delta
-
-    logger.debug(f"Wall clock time of {msg}: {round(delta, 2)}s")
+    return logger
 
 
-@contextmanager
-def debug_cpu_time(
-    logger_name: Union[str, logging.Logger],
-    block_name: Optional[str] = None,
-) -> Iterator[Dict[str, float | None]]:
-    if isinstance(logger_name, logging.Logger):
-        logger = logger_name
-    else:
-        logger = get_logger(logger_name)
-
-    msg = block_name or logger.name
-    logger.debug(f"Measuring CPU time of {msg}...")
-
-    start_time = time.process_time()
-    res: Dict[str, float | None] = {
-        "start_time": start_time,
-        "end_time": None,
-        "delta": None,
-    }
-    yield res
-
-    end_time = time.process_time()
-    delta = end_time - start_time
-
-    res["end_time"] = end_time
-    res["delta"] = delta
-
-    logger.debug(f"CPU time of {msg}: {round(delta, 2)}s")
+def trace() -> None:
+    caller = inspect.getframeinfo(inspect.stack()[1][0])
+    logger = get_logger(f"Trace {caller.filename}")
+    logger.debug(f"Line {caller.lineno}")
