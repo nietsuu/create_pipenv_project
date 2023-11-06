@@ -114,7 +114,7 @@ class Outputs:
         FileOperations.insert_text(
             "Pipfile",
             12,
-            'uvloop = {version = "*", sys_platform = "== \'linux\'"}',
+            'uvloop = {version = "*", markers = "sys_platform == \'linux\'"}',
         )
         os.system("pipenv install")
 
