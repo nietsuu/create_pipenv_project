@@ -2,7 +2,7 @@ import time
 import logging
 import inspect
 from contextlib import contextmanager
-from typing import Optional, Union, Iterator, Dict
+from typing import Optional, Union, Iterator, Dict, Any
 from {% PROJECT_NAME %}.environ import LOGGING_LEVEL
 
 
@@ -124,7 +124,11 @@ def get_logger(name: str) -> logging.Logger:
     return logger
 
 
-def trace() -> None:
+def trace(msg: Any = None) -> None:
     caller = inspect.getframeinfo(inspect.stack()[1][0])
     logger = get_logger(f"Trace {caller.filename}")
-    logger.debug(f"Line {caller.lineno}")
+
+    if msg is None:
+        logger.debug(f"Line {caller.lineno}")
+    else:
+        logger.debug(f"Line {caller.lineno}: {msg}")
