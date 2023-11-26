@@ -5,8 +5,8 @@ import logging
 import threading
 from types import TracebackType
 from typing import Any, Dict, Type, Optional
-from {% PROJECT_NAME %} import main as async_main
-from {% PROJECT_NAME %}.logging import get_logger
+from PROJECT_NAME import main as async_main
+from PROJECT_NAME.logging import get_logger
 
 
 def excepthook(

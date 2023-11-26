@@ -90,7 +90,7 @@ class Outputs:
                 continue
 
             with open(os.path.join(user_files_dirpath, filename)) as file:
-                content = file.read().replace("{% PROJECT_NAME %}", project_name)
+                content = file.read().replace("PROJECT_NAME", project_name)
 
             with open(paste_path, "w") as file:
                 file.write(content)

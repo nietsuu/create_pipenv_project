@@ -1,5 +1,5 @@
 import asyncio
-from {% PROJECT_NAME %}.logging import get_logger, trace, MeasureTime
+from PROJECT_NAME.logging import get_logger, trace, MeasureTime
 
 
 async def main(loop: asyncio.AbstractEventLoop) -> int:

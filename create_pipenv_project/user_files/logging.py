@@ -3,7 +3,7 @@ import logging
 import inspect
 from contextlib import contextmanager
 from typing import Optional, Union, Iterator, Dict, Any
-from {% PROJECT_NAME %}.environ import LOGGING_LEVEL
+from PROJECT_NAME.environ import LOGGING_LEVEL
 
 
 class MeasureTime:
