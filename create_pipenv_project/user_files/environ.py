@@ -5,7 +5,14 @@ T = TypeVar("T")
 
 
 def env(t: Callable[[str], T], key: str) -> T:
-    value = os.environ[key]
+    try:
+        value = os.environ[key]
+    except KeyError:
+        print(
+            f"Required environment variable '{key}' of "
+            f"type '{t.__name__}' is missing."
+        )
+        exit(1)
 
     if t is bool:
         value = value.lower().strip()
