@@ -65,7 +65,7 @@ class Outputs:
             f"Start writing your code at {ansi.YELLOW}"
             f"{os.path.join(inputs.project_name, inputs.project_name, '__init__.py')}"
             f"{ansi.END}.\n"
-            f"Run with {ansi.YELLOW}pipenv run app{ansi.END}.\n"
+            f"Run with {ansi.YELLOW}pipenv run main{ansi.END}.\n"
         )
 
     def _copy_user_files(self, project_name: str) -> None:
@@ -107,7 +107,7 @@ class Outputs:
             "Pipfile",
             5,
             "\n[scripts]",
-            'app = "python run.py"',
+            'main = "python run.py"',
             'tests = "coverage run -m pytest"',
             "check = \"bash -c 'black . && mypy . && mypy --install-types'\"",
         )
