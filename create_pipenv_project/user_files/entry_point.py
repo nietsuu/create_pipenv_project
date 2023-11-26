@@ -4,8 +4,7 @@ import asyncio
 import logging
 import threading
 from types import TracebackType
-from typing import Any, Dict, Type, Optional
-from PROJECT_NAME import main as async_main
+from typing import Any, Dict, Type, Optional, Callable, Coroutine
 from PROJECT_NAME.logging import get_logger
 
 
@@ -39,7 +38,9 @@ def asyncio_exception_handler(
         excepthook(type(exception), exception, None)
 
 
-def main() -> int:
+def main_wrapper(
+    main: Callable[[asyncio.AbstractEventLoop], Coroutine[Any, Any, int]]
+) -> int:
     if os.name == "nt":
         loop_factory = None
     else:
@@ -58,4 +59,4 @@ def main() -> int:
             args.exc_traceback,
         )
 
-        return runner.run(async_main(loop))
+        return runner.run(main(loop))
