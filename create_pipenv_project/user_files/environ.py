@@ -26,5 +26,5 @@ def env(t: Callable[[str], T], key: str) -> T:
     return t(value)
 
 
-LOGGING_LEVEL: str = env(str, "LOGGING_LEVEL")
-FILE_LOGGING: bool = env(bool, "FILE_LOGGING")
+DEFAULT_LOGGING_LEVEL: str = env(str, "DEFAULT_LOGGING_LEVEL")
+DEFAULT_FILE_LOGGING: bool = env(bool, "DEFAULT_FILE_LOGGING")

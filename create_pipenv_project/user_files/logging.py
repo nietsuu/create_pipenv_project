@@ -3,7 +3,7 @@ import logging
 import inspect
 from contextlib import contextmanager
 from typing import Optional, Union, Iterator, Dict, Any
-from PROJECT_NAME.environ import LOGGING_LEVEL, FILE_LOGGING
+from PROJECT_NAME.environ import DEFAULT_LOGGING_LEVEL, DEFAULT_FILE_LOGGING
 
 
 class MeasureTime:
@@ -107,20 +107,20 @@ _file_formatter = _Formatter(colored=False)
 
 def get_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
-    logger.setLevel(LOGGING_LEVEL)
+    logger.setLevel(DEFAULT_LOGGING_LEVEL)
 
     if not logger.hasHandlers():
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(_stream_formatter)
         logger.addHandler(stream_handler)
 
-        if FILE_LOGGING:
+        if DEFAULT_FILE_LOGGING:
             file_handler = logging.FileHandler("logs.txt")
             file_handler.setFormatter(_file_formatter)
             logger.addHandler(file_handler)
 
     for handler in logger.handlers:
-        handler.setLevel(LOGGING_LEVEL)
+        handler.setLevel(DEFAULT_LOGGING_LEVEL)
 
     return logger
 
