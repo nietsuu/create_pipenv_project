@@ -1,3 +1,4 @@
+import os
 import time
 import logging
 import inspect
@@ -120,7 +121,8 @@ def get_logger(
         logger.addHandler(stream_handler)
 
         if file_logging:
-            file_handler = logging.FileHandler("logs.txt")
+            os.makedirs("logs", exist_ok=True)
+            file_handler = logging.FileHandler(os.path.join("logs", "all.txt"))
             file_handler.setFormatter(_file_formatter)
             logger.addHandler(file_handler)
 
