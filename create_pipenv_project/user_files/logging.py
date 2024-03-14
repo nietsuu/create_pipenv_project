@@ -105,9 +105,13 @@ _stream_formatter = _Formatter()
 _file_formatter = _Formatter(colored=False)
 
 
-def get_logger(name: str) -> logging.Logger:
+def get_logger(
+    name: str,
+    *,
+    level: str = DEFAULT_LOGGING_LEVEL,
+) -> logging.Logger:
     logger = logging.getLogger(name)
-    logger.setLevel(DEFAULT_LOGGING_LEVEL)
+    logger.setLevel(level)
 
     if not logger.hasHandlers():
         stream_handler = logging.StreamHandler()
@@ -120,7 +124,7 @@ def get_logger(name: str) -> logging.Logger:
             logger.addHandler(file_handler)
 
     for handler in logger.handlers:
-        handler.setLevel(DEFAULT_LOGGING_LEVEL)
+        handler.setLevel(level)
 
     return logger
 
