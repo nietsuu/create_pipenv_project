@@ -109,6 +109,7 @@ def get_logger(
     name: str,
     *,
     level: str = DEFAULT_LOGGING_LEVEL,
+    file_logging: bool = DEFAULT_FILE_LOGGING,
 ) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(level)
@@ -118,7 +119,7 @@ def get_logger(
         stream_handler.setFormatter(_stream_formatter)
         logger.addHandler(stream_handler)
 
-        if DEFAULT_FILE_LOGGING:
+        if file_logging:
             file_handler = logging.FileHandler("logs.txt")
             file_handler.setFormatter(_file_formatter)
             logger.addHandler(file_handler)
