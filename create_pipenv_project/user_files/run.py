@@ -6,4 +6,4 @@ if __name__ == "__main__":
     try:
         sys.exit(main_wrapper(main))
     except KeyboardInterrupt:
-        sys.exit(130)
+        sys.exit(0)
