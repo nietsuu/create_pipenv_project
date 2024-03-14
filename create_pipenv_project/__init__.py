@@ -70,7 +70,7 @@ class Outputs:
 
     def _copy_user_files(self, project_name: str) -> None:
         mapping = {
-            "env": ".env",
+            "env": (".env", ".env.example"),
             ".gitignore": ".gitignore",
             "run.py": "run.py",
             "mypy.ini": "mypy.ini",
@@ -92,8 +92,11 @@ class Outputs:
             with open(os.path.join(user_files_dirpath, filename)) as file:
                 content = file.read().replace("PROJECT_NAME", project_name)
 
-            with open(paste_path, "w") as file:
-                file.write(content)
+            paste_paths = [paste_path] if isinstance(paste_path, str) else paste_path
+
+            for path in paste_paths:
+                with open(path, "w") as file:
+                    file.write(content)
 
     def create_project(self, name: str) -> None:
         os.mkdir(name)
