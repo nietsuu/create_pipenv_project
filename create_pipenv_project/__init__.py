@@ -20,6 +20,7 @@ class FileOperations:
 class Inputs:
     def __init__(self) -> None:
         self.project_name = self.get_project_name()
+        self.package_name = self.get_package_name()
         self.git_init = self.get_git_init()
         print()
 
@@ -28,7 +29,7 @@ class Inputs:
 
     def get_project_name(self) -> str:
         while True:
-            project_name = self.input("Project Name:")
+            project_name = self.input("Project Name (ex: MyApp, CoolCalc):")
 
             if project_name == "":
                 print_error("Project name cannot be empty.")
@@ -39,6 +40,16 @@ class Inputs:
                 continue
 
             return project_name
+
+    def get_package_name(self) -> str:
+        while True:
+            package_name = self.input("Package Name (ex: my_app, cool_calc):")
+
+            if package_name == "":
+                print_error("Package name cannot be empty.")
+                continue
+
+            return package_name
 
     def get_git_init(self) -> bool:
         while True:
@@ -55,7 +66,7 @@ class Inputs:
 
 class Outputs:
     def __init__(self, inputs: Inputs) -> None:
-        self.create_project(inputs.project_name)
+        self.create_project(inputs.project_name, inputs.package_name)
 
         if inputs.git_init:
             self.git_init()
@@ -63,21 +74,21 @@ class Outputs:
         print(f"\n{ansi.GREEN}Project successfully created.{ansi.END}")
         print(
             f"Start writing your code at {ansi.YELLOW}"
-            f"{os.path.join(inputs.project_name, inputs.project_name, '__init__.py')}"
+            f"{os.path.join(inputs.project_name, inputs.package_name, '__init__.py')}"
             f"{ansi.END}.\n"
             f"Run with {ansi.YELLOW}pipenv run main{ansi.END}.\n"
         )
 
-    def _copy_user_files(self, project_name: str) -> None:
+    def _copy_user_files(self, package_name: str) -> None:
         mapping = {
             "env": (".env", ".env.example"),
             ".gitignore": ".gitignore",
             "run.py": "run.py",
             "mypy.ini": "mypy.ini",
-            "__init__.py": os.path.join(project_name, "__init__.py"),
-            "entry_point.py": os.path.join(project_name, "entry_point.py"),
-            "environ.py": os.path.join(project_name, "environ.py"),
-            "logging.py": os.path.join(project_name, "logging.py"),
+            "__init__.py": os.path.join(package_name, "__init__.py"),
+            "entry_point.py": os.path.join(package_name, "entry_point.py"),
+            "environ.py": os.path.join(package_name, "environ.py"),
+            "logging.py": os.path.join(package_name, "logging.py"),
         }
 
         cpp_dirpath = os.path.dirname(create_pipenv_project.__file__)
@@ -90,7 +101,7 @@ class Outputs:
                 continue
 
             with open(os.path.join(user_files_dirpath, filename)) as file:
-                content = file.read().replace("PROJECT_NAME", project_name)
+                content = file.read().replace("PACKAGE_NAME", package_name)
 
             paste_paths = [paste_path] if isinstance(paste_path, str) else paste_path
 
@@ -98,12 +109,12 @@ class Outputs:
                 with open(path, "w") as file:
                     file.write(content)
 
-    def create_project(self, name: str) -> None:
-        os.mkdir(name)
-        os.chdir(name)
-        os.mkdir(name)
+    def create_project(self, project_name: str, package_name: str) -> None:
+        os.mkdir(project_name)
+        os.chdir(project_name)
+        os.mkdir(package_name)
 
-        self._copy_user_files(name)
+        self._copy_user_files(package_name)
 
         os.system("pipenv install --dev --skip-lock mypy black coverage pytest")
         FileOperations.insert_text(

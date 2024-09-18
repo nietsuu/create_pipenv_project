@@ -1,7 +1,7 @@
 if __name__ == "__main__":
     import sys
-    from PROJECT_NAME import main
-    from PROJECT_NAME.entry_point import main_wrapper
+    from PACKAGE_NAME import main
+    from PACKAGE_NAME.entry_point import main_wrapper
 
     try:
         sys.exit(main_wrapper(main))

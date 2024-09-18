@@ -5,7 +5,7 @@ import logging
 import threading
 from types import TracebackType
 from typing import Any, Dict, Type, Optional, Callable, Coroutine
-from PROJECT_NAME.logging import get_logger
+from PACKAGE_NAME.logging import get_logger
 
 
 def excepthook(

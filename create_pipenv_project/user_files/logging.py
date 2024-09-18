@@ -4,7 +4,7 @@ import logging
 import inspect
 from typing import Optional, Union, Iterator, Dict, Any
 from contextlib import contextmanager
-from PROJECT_NAME.environ import DEFAULT_LOGGING_LEVEL, DEFAULT_FILE_LOGGING
+from PACKAGE_NAME.environ import DEFAULT_LOGGING_LEVEL, DEFAULT_FILE_LOGGING
 
 _formatter = logging.Formatter(
     "\033[93m%(levelname).1s\033[0m \033[95m%(asctime)s\033[0m "
