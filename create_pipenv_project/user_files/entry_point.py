@@ -16,9 +16,7 @@ def excepthook(
     logger_name = "Global Exception Handler"
 
     try:
-        get_logger(logger_name).critical(
-            repr(exc_value), exc_info=exc_value, stack_info=True
-        )
+        get_logger(logger_name).critical(repr(exc_value), exc_info=exc_value)
     except Exception:
         logging.getLogger(logger_name).warning(
             f"'{logger_name}' failed. Fallback to 'sys.__excepthook__'."
