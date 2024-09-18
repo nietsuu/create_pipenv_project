@@ -121,13 +121,15 @@ class Outputs:
             "Pipfile",
             5,
             "\n[scripts]",
-            'main = "python run.py"',
-            'tests = "coverage run -m pytest"',
+            'dev = "python run.py"',
             "check = \"bash -c 'black . && mypy . && mypy --install-types'\"",
+            'tests = "coverage run -m pytest"',
+            'build = "mypyc run.py"',
+            'deploy = "python -c \'import os; os.environ[\\"PRODUCTION\\"] = \\"true\\"; import run\'"',
         )
         FileOperations.insert_text(
             "Pipfile",
-            12,
+            14,
             'uvloop = {version = "*", markers = "sys_platform == \'linux\'"}',
         )
         os.system("pipenv install")
