@@ -26,5 +26,6 @@ def env(t: Callable[[str], T], key: str) -> T:
     return t(value)
 
 
+PRODUCTION: str | None = os.getenv("PRODUCTION")
 DEFAULT_LOGGING_LEVEL: str = env(str, "DEFAULT_LOGGING_LEVEL")
 DEFAULT_FILE_LOGGING: bool = env(bool, "DEFAULT_FILE_LOGGING")
