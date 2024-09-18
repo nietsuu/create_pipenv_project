@@ -140,5 +140,12 @@ class Outputs:
 
 
 def main() -> int:
-    Outputs(Inputs())
+    try:
+        inputs = Inputs()
+    except KeyboardInterrupt:
+        print()
+        return 0
+
+    Outputs(inputs)
+
     return 0
