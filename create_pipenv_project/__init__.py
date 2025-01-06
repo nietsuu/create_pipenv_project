@@ -76,7 +76,7 @@ class Outputs:
             f"Start writing your code at {ansi.YELLOW}"
             f"{os.path.join(inputs.project_name, inputs.package_name, '__init__.py')}"
             f"{ansi.END}.\n"
-            f"Run with {ansi.YELLOW}pipenv run main{ansi.END}.\n"
+            f"Run with {ansi.YELLOW}pipenv run dev{ansi.END}\n"
         )
 
     def _copy_user_files(self, package_name: str) -> None:
