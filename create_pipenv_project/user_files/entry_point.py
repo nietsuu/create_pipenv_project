@@ -4,7 +4,7 @@ import asyncio
 import logging
 import threading
 from types import TracebackType
-from typing import Any, Dict, Type, Optional, Callable, Coroutine
+from typing import Any, Type, Optional, Callable, Coroutine
 from PACKAGE_NAME.logging import get_logger
 
 
@@ -26,7 +26,7 @@ def excepthook(
 
 def asyncio_exception_handler(
     loop: asyncio.AbstractEventLoop,
-    context: Dict[str, Any],
+    context: dict[str, Any],
 ) -> None:
     exception = context.get("exception")
 

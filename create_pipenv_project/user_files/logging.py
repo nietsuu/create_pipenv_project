@@ -2,7 +2,7 @@ import os
 import time
 import logging
 import inspect
-from typing import Optional, Union, Iterator, Dict, Any
+from typing import Optional, Union, Iterator, Any
 from contextlib import contextmanager
 from PACKAGE_NAME.environ import DEFAULT_LOGGING_LEVEL, DEFAULT_FILE_LOGGING
 
@@ -55,7 +55,7 @@ class MeasureTime:
     def wall_clock(
         logger_name: Union[str, logging.Logger],
         block_name: Optional[str] = None,
-    ) -> Iterator[Dict[str, float | None]]:
+    ) -> Iterator[dict[str, float | None]]:
         if isinstance(logger_name, logging.Logger):
             logger = logger_name
         else:
@@ -65,7 +65,7 @@ class MeasureTime:
         logger.debug(f"Measuring wall clock time of {msg}...")
 
         start_time = time.time()
-        res: Dict[str, float | None] = {
+        res: dict[str, float | None] = {
             "start_time": start_time,
             "end_time": None,
             "delta": None,
@@ -85,7 +85,7 @@ class MeasureTime:
     def cpu(
         logger_name: Union[str, logging.Logger],
         block_name: Optional[str] = None,
-    ) -> Iterator[Dict[str, float | None]]:
+    ) -> Iterator[dict[str, float | None]]:
         if isinstance(logger_name, logging.Logger):
             logger = logger_name
         else:
@@ -95,7 +95,7 @@ class MeasureTime:
         logger.debug(f"Measuring CPU time of {msg}...")
 
         start_time = time.perf_counter()
-        res: Dict[str, float | None] = {
+        res: dict[str, float | None] = {
             "start_time": start_time,
             "end_time": None,
             "delta": None,
