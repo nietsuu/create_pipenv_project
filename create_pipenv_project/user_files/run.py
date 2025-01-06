@@ -1,4 +1,4 @@
-from PACKAGE_NAME import main
-from PACKAGE_NAME.runners import main_wrapper
+from PACKAGE_NAME import main, shutdown
+from PACKAGE_NAME.runners import run_event_loop
 
-main_wrapper(main)
+run_event_loop(main, shutdown)

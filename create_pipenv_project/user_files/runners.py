@@ -5,7 +5,7 @@ import logging
 import threading
 import concurrent.futures
 from types import TracebackType
-from typing import Any, Type, TypeVar, Optional, Callable, Coroutine
+from typing import Any, Type, TypeVar, Optional, Callable, Coroutine, Awaitable
 from PACKAGE_NAME.logging import get_logger
 
 T = TypeVar("T")
@@ -39,9 +39,10 @@ def asyncio_exception_handler(
         excepthook(type(exception), exception, None)
 
 
-def main_wrapper(
-    main: Callable[[asyncio.AbstractEventLoop], Coroutine[Any, Any, int]]
-) -> int:
+def run_event_loop(
+    main: Callable[[], Awaitable[None]],
+    shutdown: Callable[[], Awaitable[None]],
+) -> None:
     if os.name == "nt":
         loop = asyncio.new_event_loop()
     else:
@@ -50,14 +51,13 @@ def main_wrapper(
         loop = uvloop.new_event_loop()
 
     loop.set_exception_handler(asyncio_exception_handler)
-    sys.excepthook = excepthook
-    threading.excepthook = lambda args: excepthook(
-        args.exc_type,
-        args.exc_value,
-        args.exc_traceback,
-    )
 
-    return loop.run_until_complete(main(loop))
+    try:
+        loop.run_until_complete(main())
+    except KeyboardInterrupt:
+        pass
+    finally:
+        loop.run_until_complete(shutdown())
 
 
 async def _async_wrapper(coro: Coroutine[Any, Any, T]) -> T | Exception:
@@ -77,3 +77,11 @@ def run_coro_threadsafe(
     loop: asyncio.AbstractEventLoop,
 ) -> concurrent.futures.Future[T | Exception]:
     return asyncio.run_coroutine_threadsafe(_async_wrapper(coro), loop)
+
+
+sys.excepthook = excepthook
+threading.excepthook = lambda args: excepthook(
+    args.exc_type,
+    args.exc_value,
+    args.exc_traceback,
+)
