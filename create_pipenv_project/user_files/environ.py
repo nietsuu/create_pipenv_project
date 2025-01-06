@@ -4,7 +4,7 @@ from typing import cast, Callable, TypeVar
 T = TypeVar("T")
 
 
-def env(t: Callable[[str], T], key: str) -> T:
+def required_env(t: Callable[[str], T], key: str) -> T:
     try:
         value = os.environ[key]
     except KeyError:
@@ -27,5 +27,5 @@ def env(t: Callable[[str], T], key: str) -> T:
 
 
 PRODUCTION: str | None = os.getenv("PRODUCTION")
-DEFAULT_LOGGING_LEVEL: str = env(str, "DEFAULT_LOGGING_LEVEL")
-DEFAULT_FILE_LOGGING: bool = env(bool, "DEFAULT_FILE_LOGGING")
+DEFAULT_LOGGING_LEVEL: str = required_env(str, "DEFAULT_LOGGING_LEVEL")
+DEFAULT_FILE_LOGGING: bool = required_env(bool, "DEFAULT_FILE_LOGGING")
