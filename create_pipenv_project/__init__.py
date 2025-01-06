@@ -86,7 +86,7 @@ class Outputs:
             "run.py": "run.py",
             "mypy.ini": "mypy.ini",
             "__init__.py": os.path.join(package_name, "__init__.py"),
-            "entry_point.py": os.path.join(package_name, "entry_point.py"),
+            "runners.py": os.path.join(package_name, "runners.py"),
             "environ.py": os.path.join(package_name, "environ.py"),
             "logging.py": os.path.join(package_name, "logging.py"),
         }
