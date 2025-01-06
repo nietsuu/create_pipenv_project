@@ -3,9 +3,12 @@ import sys
 import asyncio
 import logging
 import threading
+import concurrent.futures
 from types import TracebackType
-from typing import Any, Type, Optional, Callable, Coroutine
+from typing import Any, Type, TypeVar, Optional, Callable, Coroutine
 from PACKAGE_NAME.logging import get_logger
+
+T = TypeVar("T")
 
 
 def excepthook(
@@ -58,3 +61,22 @@ def main_wrapper(
         )
 
         return runner.run(main(loop))
+
+
+async def _async_wrapper(coro: Coroutine[Any, Any, T]) -> T | Exception:
+    try:
+        return await coro
+    except Exception as error:
+        get_logger(coro.__name__).exception(error)
+        return error
+
+
+def run_coro(coro: Coroutine[Any, Any, T]) -> asyncio.Task[T | Exception]:
+    return asyncio.create_task(_async_wrapper(coro), name=coro.__name__)
+
+
+def run_coro_threadsafe(
+    coro: Coroutine[Any, Any, T],
+    loop: asyncio.AbstractEventLoop,
+) -> concurrent.futures.Future[T | Exception]:
+    return asyncio.run_coroutine_threadsafe(_async_wrapper(coro), loop)
