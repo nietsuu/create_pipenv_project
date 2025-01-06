@@ -1,4 +1,4 @@
-__version__ = "0.11"
+__version__ = "1.0"
 
 import os
 import create_pipenv_project
