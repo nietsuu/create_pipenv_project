@@ -43,24 +43,21 @@ def main_wrapper(
     main: Callable[[asyncio.AbstractEventLoop], Coroutine[Any, Any, int]]
 ) -> int:
     if os.name == "nt":
-        loop_factory = None
+        loop = asyncio.new_event_loop()
     else:
         import uvloop
 
-        loop_factory = uvloop.new_event_loop
+        loop = uvloop.new_event_loop()
 
-    with asyncio.Runner(loop_factory=loop_factory) as runner:
-        loop = runner.get_loop()
+    loop.set_exception_handler(asyncio_exception_handler)
+    sys.excepthook = excepthook
+    threading.excepthook = lambda args: excepthook(
+        args.exc_type,
+        args.exc_value,
+        args.exc_traceback,
+    )
 
-        loop.set_exception_handler(asyncio_exception_handler)
-        sys.excepthook = excepthook
-        threading.excepthook = lambda args: excepthook(
-            args.exc_type,
-            args.exc_value,
-            args.exc_traceback,
-        )
-
-        return runner.run(main(loop))
+    return loop.run_until_complete(main(loop))
 
 
 async def _async_wrapper(coro: Coroutine[Any, Any, T]) -> T | Exception:
